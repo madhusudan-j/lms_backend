@@ -1,0 +1,27 @@
+{
+    "python.pythonPath": "/usr/bin/python2.7",
+    "workbench.startupEditor": "newUntitledFile",
+    "git.enableSmartCommit": true,
+    "git.confirmSync": false,
+    "team.showWelcomeMessage": false,
+    "files.autoSave": "onFocusChange",
+    "editor.wordWrap": "on",
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/*.pyc": true,
+        "**/*_.py": true,
+        "**/env/": true,
+        "**/CVS": true,
+        "**/.DS_Store": true
+    },
+    "editor.quickSuggestions": {
+        "other": true,
+        "comments": true,
+        "strings": true
+    },
+    "editor.quickSuggestionsDelay": 4,
+    // Controls the font size in pixels.
+  "editor.fontSize": 14
+}
