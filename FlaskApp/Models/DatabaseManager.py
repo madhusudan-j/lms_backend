@@ -27,18 +27,35 @@ TABLES.append(table)
 #-----------------------------------------------
 table = {}
 table['name'] = 'employees'
-table['query'] = "CREATE TABLE employees (employeId INT AUTO_INCREMENT primary key NOT NULL, email VARCHAR(500) UNIQUE, password VARCHAR(500), companyId int, image VARCHAR(7500), phone VARCHAR(45), first_name VARCHAR(250), last_name VARCHAR(250), gender boolean, joinedDate VARCHAR(100), date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, CONSTRAINT fkcompanyId FOREIGN KEY(companyId) REFERENCES companies(companyId) ON DELETE CASCADE)"
+table['query'] = "CREATE TABLE employees (employeId INT AUTO_INCREMENT primary key NOT NULL, email VARCHAR(500) UNIQUE, password VARCHAR(500), companyId int, image VARCHAR(7500), phone VARCHAR(45), first_name VARCHAR(250), last_name VARCHAR(250), gender boolean, joinedDate VARCHAR(100), date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, CONSTRAINT fkemployees_companyId FOREIGN KEY(companyId) REFERENCES companies(companyId) ON DELETE CASCADE)"
 TABLES.append(table)
 
+#-----------------------------------------------
+table = {}
+table['name'] = 'leaves'
+table['query'] = "CREATE TABLE leaves (leaveId INT AUTO_INCREMENT primary key NOT NULL, requestedby VARCHAR(500), requestedto INT, ondate date, reason VARCHAR(1000), state VARCHAR(100), date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, CONSTRAINT fkleaves_requestedto FOREIGN KEY(requestedto) REFERENCES employees(employeId) ON DELETE CASCADE)"
+TABLES.append(table)
+
+#-----------------------------------------------
+table = {}
+table['name'] = 'holidays'
+table['query'] = "CREATE TABLE holidays (holidayId INT AUTO_INCREMENT primary key NOT NULL, companyId INT, ondate VARCHAR(100), name VARCHAR(100), remarks VARCHAR(500), weekday VARCHAR(100), type VARCHAR(100), date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, CONSTRAINT fkholidays_companyId FOREIGN KEY(companyId) REFERENCES companies(companyId) ON DELETE CASCADE)"
+TABLES.append(table)
+
+#-----------------------------------------------
+table = {}
+table['name'] = 'leavepolicies'
+table['query'] = "CREATE TABLE leavepolicies (leavepolicyId INT AUTO_INCREMENT primary key NOT NULL, companyId INT, type VARCHAR(100), quantum INT, remarks VARCHAR(500), date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, CONSTRAINT fkleavepolicies_companyId FOREIGN KEY(companyId) REFERENCES companies(companyId) ON DELETE CASCADE)"
+TABLES.append(table)
 
 #-----------------------------------------------
 
 connection = mysql.connector.connect(
-    user=DB_USER,
-    password=DB_PASSWORD,
-    database=DB_NAME,
+    user = DB_USER,
+    password = DB_PASSWORD,
+    database = DB_NAME,
     host = DB_HOST
-)
+    )
 connection.close()
 
 class QueryType(Enum):
