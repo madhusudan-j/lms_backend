@@ -3,6 +3,7 @@ import os
 from Models.DatabaseManager import QueryType, DB
 from Models.CompanyManager import CompanyManager
 from Models.EmployeManager import EmployeManager
+from Models.LeaveManager import LeaveManager
 
 app = Flask(__name__)
 app.secret_key = os.urandom(12)
@@ -13,7 +14,7 @@ db.create_db()
 #---------------------  Web pages ------------------------
 #*********************************************************
 @app.route('/')
-def homepage():
+def index():
     return "Leave Management System"
 
 #***********************************************************
@@ -54,6 +55,30 @@ def deleteEmploye():
 @app.route('/getEmployees')
 def getEmployees():
     return EmployeManager().getEmployees(request = request)
+
+#***********************************************************
+#************************  leave  **************************
+#***********************************************************
+
+@app.route('/applyLeave', methods=['POST'])
+def applyLeave():
+    return LeaveManager().applyLeave(request = request)
+
+@app.route('/updateLeave', methods=['PUT'])
+def updateLeave():
+    return LeaveManager().applyLeave(request = request)
+
+@app.route('/deleteLeave', methods=['DELETE'])
+def deleteLeave():
+    return LeaveManager().deleteLeave(request = request)
+
+@app.route('/getLeaves')
+def getLeaves():
+    return LeaveManager().getLeaves(request = request)
+
+@app.route('/approveLeave', methods=['POST'])
+def approveLeave():
+    return LeaveManager().approveLeave(request = request)
 
 #***********************************************************
 
