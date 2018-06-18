@@ -1,6 +1,6 @@
 from flask import Flask, render_template, flash, redirect,url_for,send_file, request, session, abort, json, jsonify, g
 import os
-from Models.DatabaseManager import QueryType, DB
+from Models.DB import QueryType, DB
 from Models.CompanyManager import CompanyManager
 from Models.EmployeManager import EmployeManager
 from Models.LeaveManager import LeaveManager

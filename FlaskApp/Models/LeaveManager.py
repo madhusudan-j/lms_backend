@@ -1,4 +1,4 @@
-from DatabaseManager import DB, QueryType
+from DB import DB, QueryType
 from flask import json, jsonify
 from passlib.hash import sha256_crypt
 from flask_mail import Mail, Message
@@ -64,7 +64,6 @@ class LeaveManager:
             for leaves in leavesFilter:
                 query = query + leaves + ' and '
             query = query[:-5]
-        print '#################',query
         return DB().execute_json(query, QueryType.fetchAll)
 
     def approveLeave(self, request, mail):

@@ -1,4 +1,4 @@
-from DatabaseManager import DB, QueryType
+from DB import DB, QueryType
 from flask import json, jsonify
 from passlib.hash import sha256_crypt
 
