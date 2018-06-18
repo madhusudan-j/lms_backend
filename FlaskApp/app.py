@@ -4,11 +4,20 @@ from Models.DatabaseManager import QueryType, DB
 from Models.CompanyManager import CompanyManager
 from Models.EmployeManager import EmployeManager
 from Models.LeaveManager import LeaveManager
+from flask_mail import Mail
 
 app = Flask(__name__)
 app.secret_key = os.urandom(12)
 db = DB()
 db.create_db()
+
+app.config['MAIL_SERVER']='smtp.gmail.com'
+app.config['MAIL_PORT'] = 465
+app.config['MAIL_USERNAME'] = 'reg.nmccbt@gmail.com'
+app.config['MAIL_PASSWORD'] = 'reg.nmccbt12345'
+app.config['MAIL_USE_TLS'] = False
+app.config['MAIL_USE_SSL'] = True
+mail = Mail(app)
 
 #*********************************************************
 #---------------------  Web pages ------------------------
@@ -56,17 +65,21 @@ def deleteEmploye():
 def getEmployees():
     return EmployeManager().getEmployees(request = request)
 
+@app.route('/signinEmploye', methods=['POST'])
+def signinEmploye():
+    return EmployeManager().signinEmploye(request = request)
+
 #***********************************************************
 #************************  leave  **************************
 #***********************************************************
 
 @app.route('/applyLeave', methods=['POST'])
 def applyLeave():
-    return LeaveManager().applyLeave(request = request)
+    return LeaveManager().applyLeave(request = request, mail = mail)
 
 @app.route('/updateLeave', methods=['PUT'])
 def updateLeave():
-    return LeaveManager().applyLeave(request = request)
+    return LeaveManager().applyLeave(request = request, mail = mail)
 
 @app.route('/deleteLeave', methods=['DELETE'])
 def deleteLeave():
@@ -78,7 +91,7 @@ def getLeaves():
 
 @app.route('/approveLeave', methods=['POST'])
 def approveLeave():
-    return LeaveManager().approveLeave(request = request)
+    return LeaveManager().approveLeave(request = request, mail = mail)
 
 #***********************************************************
 

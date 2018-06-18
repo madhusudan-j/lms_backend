@@ -6,11 +6,15 @@ class EmployeManager:
 
     def registerEmploye(self, request):
         employeId = request.form.get('employeId')
+        email = request.form.get('email')
+        query = "SELECT * FROM employees WHERE email = '{}'".format(email)
+        data = DB().execute(query, QueryType.fetchOne)
+        if data:
+            return jsonify({ 'status': 'fail', 'message': 'This email already registered, try with another' })
         name = request.form.get('name')
         name = name.replace("'","''")
-        email = request.form.get('email')
         password = sha256_crypt.encrypt(str(request.form.get('password')))
-        companyId = request.form.get('companyId')
+        companyId = request.headers.get('companyId')
         if employeId :
             queryStr = "UPDATE employees SET first_name = '{}', email = '{}', companyId = '{}', password = '{}' WHERE employeId = '{}'"
             query = queryStr.format(name, email, companyId, password, employeId)
@@ -32,3 +36,16 @@ class EmployeManager:
         else:
             query = "select * from employees"
             return DB().execute_json(query, QueryType.fetchAll)
+
+    def signinEmploye(self, request):      
+        email = request.form.get('email')       
+        entered_password = request.form.get('password')
+        query = "SELECT * FROM employees WHERE email = '{}'".format(email)
+        data = DB().execute(query, QueryType.fetchOne)
+        if data == None:
+            return jsonify({ 'status': 'fail', 'message': 'No records found please signup' })
+        user_password = data["password"]
+        if sha256_crypt.verify(entered_password, user_password):
+            return jsonify({ "status": "ok",  "message": "Signin Sucessfull", "data": data })
+        else:               
+            return jsonify({ "status": "fail",  "message": " Incurrect password." }) 
