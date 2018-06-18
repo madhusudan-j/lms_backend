@@ -32,3 +32,16 @@ class CompanyManager:
         else:
             query = "select * from companies"
             return DB().execute_json(query, QueryType.fetchAll)
+
+    def signinCompany(self, request):
+        email = request.form.get('email')       
+        entered_password = request.form.get('password')
+        query = "SELECT * FROM companies WHERE email = '{}'".format(email)
+        data = DB().execute(query, QueryType.fetchOne)
+        if data == None:
+            return jsonify({ 'status': 'fail', 'message': 'No records found please signup' })
+        user_password = data["password"]
+        if sha256_crypt.verify(entered_password, user_password):
+            return jsonify({ "status": "ok",  "message": "Signin Sucessfull", "data": data })
+        else:               
+            return jsonify({ "status": "fail",  "message": " Incurrect password." }) 

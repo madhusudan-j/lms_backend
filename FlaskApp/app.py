@@ -45,6 +45,10 @@ def deleteCompany():
 def getCompanies():
     return CompanyManager().getCompanies(request = request)
 
+@app.route('/signinCompany', methods=['POST'])
+def signinCompany():
+    return CompanyManager().signinCompany(request = request)
+
 #***********************************************************
 #***********************   employe  ************************
 #***********************************************************
@@ -92,6 +96,25 @@ def getLeaves():
 @app.route('/approveLeave', methods=['POST'])
 def approveLeave():
     return LeaveManager().approveLeave(request = request, mail = mail)
+
+#***********************************************************
+
+@app.route('/addHoliday', methods=['POST'])
+def addHoliday():
+    return LeaveManager().addHoliday(request = request)
+
+@app.route('/updateHoliday', methods=['POST'])
+def updateHoliday():
+    return LeaveManager().addHoliday(request = request)
+
+@app.route('/deleteHoliday', methods=['DELETE'])
+def deleteHoliday():
+    return LeaveManager().deleteHoliday(request = request)
+
+@app.route('/getHolidays')
+def getHolidays():
+    return LeaveManager().getHolidays(request = request)
+
 
 #***********************************************************
 
