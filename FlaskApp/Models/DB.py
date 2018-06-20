@@ -27,7 +27,7 @@ TABLES.append(table)
 #-----------------------------------------------
 table = {}
 table['name'] = 'employees'
-table['query'] = "CREATE TABLE employees (employeId INT AUTO_INCREMENT primary key NOT NULL, email VARCHAR(500) UNIQUE, password VARCHAR(500), companyId int, image VARCHAR(7500), phone VARCHAR(45), first_name VARCHAR(250), last_name VARCHAR(250), manager VARCHAR(500), designation VARCHAR(500), gender boolean, joinedDate VARCHAR(100), date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, CONSTRAINT fkemployees_companyId FOREIGN KEY(companyId) REFERENCES companies(companyId) ON DELETE CASCADE)"
+table['query'] = "CREATE TABLE employees (employeId INT AUTO_INCREMENT primary key NOT NULL, email VARCHAR(500) UNIQUE, registerId INT default 0, password VARCHAR(500), companyId int, image VARCHAR(7500), phone VARCHAR(45), first_name VARCHAR(250), last_name VARCHAR(250), manager VARCHAR(500), designation VARCHAR(500), gender boolean, joinedDate VARCHAR(100), date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, CONSTRAINT fkemployees_companyId FOREIGN KEY(companyId) REFERENCES companies(companyId) ON DELETE CASCADE)"
 TABLES.append(table)
 
 #-----------------------------------------------

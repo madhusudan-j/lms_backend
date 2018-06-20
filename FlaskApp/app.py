@@ -4,8 +4,8 @@ from Models.DB import QueryType, DB
 from Models.CompanyManager import CompanyManager
 from Models.EmployeManager import EmployeManager
 from Models.LeaveManager import LeaveManager
-from flask_mail import Mail
 from Models.LeavePolicyManager import LeavePolicyManager
+from flask_mail import Mail
 
 app = Flask(__name__)
 app.secret_key = os.urandom(12)
@@ -57,6 +57,12 @@ def signinCompany():
 @app.route('/registerEmploye', methods=['POST'])
 def registerEmploye():
     return EmployeManager().registerEmploye(request = request, mail = mail)
+
+@app.route('/completeEmployeRegister')
+def completeEmployeRegister():
+    email = request.args.get('email')
+    registerId = request.args.get('registerId')
+    return jsonify({ 'email': email, 'registerId':registerId})      
 
 @app.route('/updateEmploye', methods=['PUT'])
 def updateEmploye():
