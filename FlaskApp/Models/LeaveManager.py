@@ -1,6 +1,5 @@
 from DB import DB, QueryType
 from flask import json, jsonify
-from passlib.hash import sha256_crypt
 from flask_mail import Mail, Message
 
 class LeaveManager:
@@ -55,7 +54,7 @@ class LeaveManager:
             subquery = ' requestedto = ' + "'" + month + "'"
             leavesFilter.append(subquery)
         else:
-            subquery = ' leaveId = ' + "'" + leaveId 
+            subquery = ' leaveId = ' + "'" + leaveId + "'" 
             leavesFilter.append(subquery)
         query = "SELECT * FROM leaves"
 
@@ -116,3 +115,5 @@ class LeaveManager:
         else:
             query = "select * from holidays"
             return DB().execute_json(query, QueryType.fetchAll)
+
+    

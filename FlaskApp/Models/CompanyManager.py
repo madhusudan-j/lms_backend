@@ -9,7 +9,6 @@ class CompanyManager:
         name = request.form.get('name')
         name = name.replace("'","''")
         email = request.form.get('email')
-        email = email.replace("'","''")
         password = sha256_crypt.encrypt(str(request.form.get('password')))
         if companyId:
             queryStr = "UPDATE companies SET name = '{}', email = '{}', password = '{}' WHERE companyId = '{}'"

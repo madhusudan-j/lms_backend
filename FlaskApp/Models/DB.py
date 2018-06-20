@@ -27,7 +27,7 @@ TABLES.append(table)
 #-----------------------------------------------
 table = {}
 table['name'] = 'employees'
-table['query'] = "CREATE TABLE employees (employeId INT AUTO_INCREMENT primary key NOT NULL, email VARCHAR(500) UNIQUE, password VARCHAR(500), companyId int, image VARCHAR(7500), phone VARCHAR(45), first_name VARCHAR(250), last_name VARCHAR(250), gender boolean, joinedDate VARCHAR(100), date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, CONSTRAINT fkemployees_companyId FOREIGN KEY(companyId) REFERENCES companies(companyId) ON DELETE CASCADE)"
+table['query'] = "CREATE TABLE employees (employeId INT AUTO_INCREMENT primary key NOT NULL, email VARCHAR(500) UNIQUE, password VARCHAR(500), companyId int, image VARCHAR(7500), phone VARCHAR(45), first_name VARCHAR(250), last_name VARCHAR(250), manager VARCHAR(500), designation VARCHAR(500), gender boolean, joinedDate VARCHAR(100), date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, CONSTRAINT fkemployees_companyId FOREIGN KEY(companyId) REFERENCES companies(companyId) ON DELETE CASCADE)"
 TABLES.append(table)
 
 #-----------------------------------------------
@@ -45,7 +45,7 @@ TABLES.append(table)
 #-----------------------------------------------
 table = {}
 table['name'] = 'leavepolicies'
-table['query'] = "CREATE TABLE leavepolicies (leavepolicyId INT AUTO_INCREMENT primary key NOT NULL, companyId INT, type VARCHAR(100), quantum INT, remarks VARCHAR(500), date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, CONSTRAINT fkleavepolicies_companyId FOREIGN KEY(companyId) REFERENCES companies(companyId) ON DELETE CASCADE)"
+table['query'] = "CREATE TABLE leavepolicies (leavepolicyId INT AUTO_INCREMENT primary key NOT NULL, companyId INT, type VARCHAR(100), quantum INT, frequency INT, remarks VARCHAR(500), date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, CONSTRAINT fkleavepolicies_companyId FOREIGN KEY(companyId) REFERENCES companies(companyId) ON DELETE CASCADE)"
 TABLES.append(table)
 
 #-----------------------------------------------
@@ -126,7 +126,7 @@ class DB:
     def execute(self, query, type):
         try:
             connection = mysql.connector.connect(user = DB_USER, password = DB_PASSWORD)
-            cursor = connection.cursor(dictionary=True)
+            cursor = connection.cursor(dictionary = True)
             connection.database = DB_NAME
             cursor.execute(query)
             if type == QueryType.insert:

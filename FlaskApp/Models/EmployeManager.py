@@ -1,26 +1,30 @@
 from DB import DB, QueryType
 from flask import json, jsonify
 from passlib.hash import sha256_crypt
+from flask_mail import Mail, Message
 
 class EmployeManager:
 
-    def registerEmploye(self, request):
+    def registerEmploye(self, request, mail):
+        companyId = request.headers.get('companyId')
         employeId = request.form.get('employeId')
         email = request.form.get('email')
         query = "SELECT * FROM employees WHERE email = '{}'".format(email)
         data = DB().execute(query, QueryType.fetchOne)
         if data:
             return jsonify({ 'status': 'fail', 'message': 'This email already registered, try with another' })
-        name = request.form.get('name')
-        name = name.replace("'","''")
-        password = sha256_crypt.encrypt(str(request.form.get('password')))
-        companyId = request.headers.get('companyId')
-        if employeId :
-            queryStr = "UPDATE employees SET first_name = '{}', email = '{}', companyId = '{}', password = '{}' WHERE employeId = '{}'"
-            query = queryStr.format(name, email, companyId, password, employeId)
-        else:
-            queryStr = "INSERT INTO employees (first_name, email, password, companyId) values ('{}','{}','{}','{}')"
-            query = queryStr.format(name, email, password, companyId)
+        query = "INSERT INTO employees (email, companyId) values ('{}','{}')".format(email, companyId)
+        # name = request.form.get('name'bhjbfsjfcjk hj
+        # password = sha256_crypt.encrypt(str(request.form.get('password')))
+        # if employeId :
+        #     queryStr = "UPDATE employees SET first_name = '{}', email = '{}', companyId = '{}', password = '{}' WHERE employeId = '{}'"
+        #     query = queryStr.format(name, email, companyId, password, employeId)
+        # else:
+            # queryStr = "INSERT INTO employees (first_name, email, password, companyId) values ('{}','{}','{}','{}')"
+            # query = queryStr.format(name, email, password, companyId)
+        # msg = Message( 'Request for leave', sender = 'reg.nmccbt@gmail.com', recipients =[requestedto])
+        # msg.body =  reqByEmpName + ' with email ' + reqByEmpEmail + ' is requested for leave on ' + ondate + ' with the reason ' + reason
+        # mail.send(msg) 
         return DB().execute_json(query, QueryType.insert)
 
     def deleteEmploye(self, request):
