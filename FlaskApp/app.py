@@ -1,9 +1,10 @@
 from flask import Flask, render_template, flash, redirect,url_for,send_file, request, session, abort, json, jsonify, g
 import os
-from Models.DatabaseManager import QueryType, DB
+from Models.DB import QueryType, DB
 from Models.CompanyManager import CompanyManager
 from Models.EmployeManager import EmployeManager
 from Models.LeaveManager import LeaveManager
+from Models.LeavePolicyManager import LeavePolicyManager
 from flask_mail import Mail
 
 app = Flask(__name__)
@@ -24,10 +25,10 @@ mail = Mail(app)
 #*********************************************************
 @app.route('/')
 def index():
-    return "Leave Management System"
+    return "<h1>Leave Management System</h1>"
 
 #***********************************************************
-#************************  company  ************************
+#************************  Company  ************************
 #***********************************************************
 @app.route('/registerCompany', methods=['POST'])
 def registerCompany():
@@ -45,17 +46,27 @@ def deleteCompany():
 def getCompanies():
     return CompanyManager().getCompanies(request = request)
 
+@app.route('/signinCompany', methods=['POST'])
+def signinCompany():
+    return CompanyManager().signinCompany(request = request)
+
 #***********************************************************
-#***********************   employe  ************************
+#***********************   Employe  ************************
 #***********************************************************
 
 @app.route('/registerEmploye', methods=['POST'])
 def registerEmploye():
-    return EmployeManager().registerEmploye(request = request)
+    return EmployeManager().registerEmploye(request = request, mail = mail)
+
+@app.route('/completeEmployeRegister')
+def completeEmployeRegister():
+    email = request.args.get('email')
+    registerId = request.args.get('registerId')
+    return jsonify({ 'email': email, 'registerId':registerId})      
 
 @app.route('/updateEmploye', methods=['PUT'])
 def updateEmploye():
-    return EmployeManager().registerEmploye(request = request)
+    return EmployeManager().registerEmploye(request = request, mail = mail)
 
 @app.route('/deleteEmploye', methods=['DELETE'])
 def deleteEmploye():
@@ -70,7 +81,7 @@ def signinEmploye():
     return EmployeManager().signinEmploye(request = request)
 
 #***********************************************************
-#************************  leave  **************************
+#************************  Leave  **************************
 #***********************************************************
 
 @app.route('/applyLeave', methods=['POST'])
@@ -93,10 +104,46 @@ def getLeaves():
 def approveLeave():
     return LeaveManager().approveLeave(request = request, mail = mail)
 
+#***********************  Holiday ****************************
+
+@app.route('/addHoliday', methods=['POST'])
+def addHoliday():
+    return LeaveManager().addHoliday(request = request)
+
+@app.route('/updateHoliday', methods=['PUT'])
+def updateHoliday():
+    return LeaveManager().addHoliday(request = request)
+
+@app.route('/deleteHoliday', methods=['DELETE'])
+def deleteHoliday():
+    return LeaveManager().deleteHoliday(request = request)
+
+@app.route('/getHolidays')
+def getHolidays():
+    return LeaveManager().getHolidays(request = request)
+
+#*********************  Leavepolicy ***********************
+
+@app.route('/addLeavetype', methods=['POST'])
+def addLeavetype():
+    return LeavePolicyManager().addLeavetype(request = request)
+
+@app.route('/updateLeavetype', methods=['PUT'])
+def updateLeavetype():
+    return LeavePolicyManager().addLeavetype(request = request)
+
+@app.route('/deleteLeavetype', methods=['DELETE'])
+def deleteLeavetype():
+    return LeavePolicyManager().deleteLeavetype(request = request)
+
+@app.route('/getLeavetypes')
+def getLeavetypes():
+    return LeavePolicyManager().getLeavetypes(request = request)
+
 #***********************************************************
 
 if __name__ == "__main__":
     app.debug = True
-    app.run(host='127.0.0.1',port=8000)
+    app.run(host = '127.0.0.1', port = 8000)
 
 #***********************************************************

@@ -1,4 +1,4 @@
-from DatabaseManager import DB, QueryType
+from DB import DB, QueryType
 from flask import json, jsonify
 from passlib.hash import sha256_crypt
 
@@ -9,7 +9,6 @@ class CompanyManager:
         name = request.form.get('name')
         name = name.replace("'","''")
         email = request.form.get('email')
-        email = email.replace("'","''")
         password = sha256_crypt.encrypt(str(request.form.get('password')))
         if companyId:
             queryStr = "UPDATE companies SET name = '{}', email = '{}', password = '{}' WHERE companyId = '{}'"
@@ -32,3 +31,16 @@ class CompanyManager:
         else:
             query = "select * from companies"
             return DB().execute_json(query, QueryType.fetchAll)
+
+    def signinCompany(self, request):
+        email = request.form.get('email')       
+        entered_password = request.form.get('password')
+        query = "SELECT * FROM companies WHERE email = '{}'".format(email)
+        data = DB().execute(query, QueryType.fetchOne)
+        if data == None:
+            return jsonify({ 'status': 'fail', 'message': 'No records found please signup' })
+        user_password = data["password"]
+        if sha256_crypt.verify(entered_password, user_password):
+            return jsonify({ "status": "ok",  "message": "Signin Sucessfull", "data": data })
+        else:               
+            return jsonify({ "status": "fail",  "message": " Incurrect password." }) 

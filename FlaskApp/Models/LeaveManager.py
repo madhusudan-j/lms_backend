@@ -1,6 +1,5 @@
-from DatabaseManager import DB, QueryType
+from DB import DB, QueryType
 from flask import json, jsonify
-from passlib.hash import sha256_crypt
 from flask_mail import Mail, Message
 
 class LeaveManager:
@@ -55,7 +54,7 @@ class LeaveManager:
             subquery = ' requestedto = ' + "'" + month + "'"
             leavesFilter.append(subquery)
         else:
-            subquery = ' leaveId = ' + "'" + leaveId 
+            subquery = ' leaveId = ' + "'" + leaveId + "'" 
             leavesFilter.append(subquery)
         query = "SELECT * FROM leaves"
 
@@ -64,7 +63,6 @@ class LeaveManager:
             for leaves in leavesFilter:
                 query = query + leaves + ' and '
             query = query[:-5]
-        print '#################',query
         return DB().execute_json(query, QueryType.fetchAll)
 
     def approveLeave(self, request, mail):
@@ -87,3 +85,35 @@ class LeaveManager:
             mail.send(msg)
             return jsonify({'status':'ok', 'message':'', 'data':''})
         return jsonify({'status':'fail', 'message':status['message']})
+
+    def addHoliday(self, request):
+        holidayId = request.form.get('holidayId')
+        companyId = request.headers.get('companyId')
+        ondate = request.form.get('ondate')  
+        name  = request.form.get('name')  
+        remarks = request.form.get('remarks')  
+        weekday = request.form.get('weekday')
+        if holidayId:
+            queryStr = "UPDATE holidays SET companyId = '{}', ondate = '{}', name = '{}', remarks = '{}', weekday = '{}' WHERE holidayId = '{}'"
+            query = queryStr.format(companyId, ondate, name, remarks, weekday, holidayId)
+        else:
+            queryStr = "INSERT INTO holidays (companyId, ondate, name, remarks, weekday) values ('{}', '{}', '{}', '{}', '{}')"
+            query = queryStr.format(companyId, ondate, name, remarks, weekday)
+        print query
+        return DB().execute_json(query, QueryType.insert)
+
+    def deleteHoliday(self, request):
+        holidayId = request.form.get('holidayId')
+        query = "DELETE FROM holidays WHERE holidayId = '{}'".format(holidayId)
+        return DB().execute_json(query, QueryType.insert)
+
+    def getHolidays(self, request):
+        holidayId = request.args.get('holidayId')
+        if holidayId:
+            query = "select * from holidays where holidayId = '{}'".format(holidayId)
+            return DB().execute_json(query, QueryType.fetchAll)
+        else:
+            query = "select * from holidays"
+            return DB().execute_json(query, QueryType.fetchAll)
+
+    
